@@ -16,7 +16,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-neutral-400 font-mono text-xs md:text-sm">Overview of your Hey AI usage and performance</p>
+          <p className="text-neutral-400 font-mono text-xs md:text-sm">Overview of your HeyAI usage and performance</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative w-full md:w-auto">
