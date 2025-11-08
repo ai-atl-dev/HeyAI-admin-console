@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Logo } from "./logo"
 import { MobileMenu } from "./mobile-menu"
+import { ThemeToggle } from "./theme-toggle"
 
 export const Header = () => {
   return (
@@ -9,10 +10,10 @@ export const Header = () => {
         <Link href="/">
           <Logo className="w-[100px] md:w-[120px]" />
         </Link>
-        <nav className="flex max-lg:hidden absolute left-1/2 -translate-x-1/2 items-center justify-center gap-x-10 backdrop-blur-md bg-white/5 px-8 py-3 rounded-full">
+        <nav className="flex max-lg:hidden absolute left-1/2 -translate-x-1/2 items-center justify-center gap-x-10 px-8 py-3 rounded-full backdrop-blur-2xl bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 shadow-lg shadow-foreground/5">
           {["About", "Features", "Pricing", "Contact"].map((item) => (
             <Link
-              className="uppercase inline-block font-mono text-foreground/60 hover:text-foreground/100 duration-150 transition-colors ease-out"
+              className="uppercase inline-block font-mono text-sm text-foreground hover:bg-foreground/10 dark:hover:bg-foreground/15 px-3 py-1.5 rounded-full transition-all duration-200"
               href={`#${item.toLowerCase()}`}
               key={item}
             >
@@ -20,13 +21,16 @@ export const Header = () => {
             </Link>
           ))}
         </nav>
-        <Link
-          className="uppercase max-lg:hidden transition-colors ease-out duration-150 font-mono text-primary hover:text-primary/80"
-          href="/admin/dashboard"
-        >
-          Admin Console
-        </Link>
-        <MobileMenu />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            className="max-lg:hidden px-6 py-2.5 rounded-full font-mono text-sm backdrop-blur-2xl bg-foreground/5 dark:bg-foreground/10 text-foreground hover:text-foreground hover:bg-foreground/10 dark:hover:bg-foreground/15 border border-foreground/10 hover:border-foreground/20 transition-all duration-200 shadow-lg shadow-foreground/5"
+            href="/admin/dashboard"
+          >
+            Admin Console
+          </Link>
+          <MobileMenu />
+        </div>
       </header>
     </div>
   )
