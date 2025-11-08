@@ -4,10 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function AdminDashboard() {
   const stats = [
-    { title: "Total Calls", value: "1,247", change: "+12.5%", icon: "📞" },
-    { title: "Active Agents", value: "8", change: "+2", icon: "🤖" },
-    { title: "Total Minutes", value: "3,542", change: "+8.3%", icon: "⏱️" },
-    { title: "Revenue", value: "$2,847", change: "+15.2%", icon: "💰" },
+    { title: "Total Calls", value: "1,247", change: "+12.5%" },
+    { title: "Active Agents", value: "8", change: "+2" },
+    { title: "Total Minutes", value: "3,542", change: "+8.3%" },
+    { title: "Revenue", value: "$2,847", change: "+15.2%" },
   ]
 
   return (
@@ -46,11 +46,10 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <Card key={stat.title} className="bg-neutral-900 border-neutral-800 hover:border-neutral-700 transition-colors">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader className="pb-2 text-center">
               <CardDescription className="font-mono text-xs uppercase text-neutral-500">{stat.title}</CardDescription>
-              <span className="text-2xl">{stat.icon}</span>
             </CardHeader>
-            <CardContent>
+            <CardContent className="text-center">
               <div className="text-3xl font-bold text-white">{stat.value}</div>
               <p className="text-sm text-green-500 mt-1">{stat.change}</p>
             </CardContent>
@@ -79,9 +78,6 @@ export default function AdminDashboard() {
                   className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-lg hover:bg-neutral-800 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-neutral-700 rounded-full flex items-center justify-center text-lg">
-                      📞
-                    </div>
                     <div>
                       <p className="font-mono text-sm text-white">{call.caller}</p>
                       <p className="text-xs text-neutral-500">{call.agent} • {call.time}</p>
