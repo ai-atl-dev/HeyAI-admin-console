@@ -19,15 +19,8 @@ export function AdminSidebar() {
 
   return (
     <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-neutral-900 border-r border-neutral-800 flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-neutral-800">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-3xl font-extrabold text-white tracking-tight">HeyAI</span>
-        </Link>
-      </div>
-
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 pt-6">
         {/* Workspace Section */}
         <div className="mb-8">
           <h3 className="text-xs font-mono uppercase text-neutral-500 mb-3 px-3">Workspace</h3>
