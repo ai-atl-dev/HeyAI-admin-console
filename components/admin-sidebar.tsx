@@ -20,7 +20,7 @@ export function AdminSidebar() {
   return (
     <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-neutral-900 border-r border-neutral-800 flex-col">
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4 pt-6">
+      <div className="flex-1 overflow-y-auto p-4 pt-20 md:pt-24">
         {/* Workspace Section */}
         <div className="mb-8">
           <h3 className="text-xs font-mono uppercase text-neutral-500 mb-3 px-3">Workspace</h3>
