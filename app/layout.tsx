@@ -11,7 +11,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Hey AI - Voice API",
+  title: "HeyAI - Voice API",
   description: "Talk to your AI assistant - complete tasks over a phone call",
   generator: "v0.app",
 }

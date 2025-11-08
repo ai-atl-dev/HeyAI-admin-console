@@ -22,7 +22,7 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-neutral-800">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-white">Hey AI</span>
+          <span className="text-3xl font-extrabold text-white tracking-tight">HeyAI</span>
         </Link>
       </div>
 
