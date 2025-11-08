@@ -21,7 +21,7 @@ export function Hero() {
       <GL hovering={hovering} />
 
       <div className="flex-1 flex flex-col items-center justify-start pt-24 text-center relative z-10">
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-sentient mt-24 drop-shadow-lg">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-sentient mt-24 drop-shadow-lg neon-glow-heading">
           AI that talks, texts and gets it done
         </h1>
         <p className="font-mono text-sm sm:text-base text-foreground/60 text-balance mt-8 max-w-[440px] mx-auto drop-shadow-md">
