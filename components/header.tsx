@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { Logo } from "./logo"
 import { MobileMenu } from "./mobile-menu"
-import { ThemeToggle } from "./theme-toggle"
 
 export const Header = () => {
   return (
@@ -22,7 +21,6 @@ export const Header = () => {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Link
             className="max-lg:hidden px-6 py-2.5 rounded-full font-mono text-sm backdrop-blur-2xl bg-foreground/5 dark:bg-foreground/10 text-foreground hover:text-foreground hover:bg-foreground/10 dark:hover:bg-foreground/15 border border-foreground/10 hover:border-foreground/20 transition-all duration-200 shadow-lg shadow-foreground/5"
             href="/admin/dashboard"
