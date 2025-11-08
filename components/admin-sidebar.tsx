@@ -18,7 +18,7 @@ export function AdminSidebar() {
   ]
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-neutral-900 border-r border-neutral-800 flex-col">
+    <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-neutral-900 border-r border-neutral-800 flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-neutral-800">
         <Link href="/" className="flex items-center gap-2">
