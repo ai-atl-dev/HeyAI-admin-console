@@ -1,17 +1,99 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react"
+import { StatsResponse, RecentCall, QuickStatsResponse, StatCard } from "@/types/dashboard"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function AdminDashboard() {
-  const stats = [
-    { title: "Total Calls", value: "1,247", change: "+12.5%" },
-    { title: "Active Agents", value: "8", change: "+2" },
-    { title: "Total Minutes", value: "3,542", change: "+8.3%" },
-    { title: "Revenue", value: "$2,847", change: "+15.2%" },
-  ]
+  const [stats, setStats] = useState<StatCard[]>([
+    { title: "Total Calls", value: "Loading...", change: "-" },
+    { title: "Active Agents", value: "Loading...", change: "-" },
+    { title: "Total Minutes", value: "Loading...", change: "-" },
+    { title: "Revenue", value: "Loading...", change: "-" },
+  ])
+  const [recentCalls, setRecentCalls] = useState<RecentCall[]>([])
+  const [quickStats, setQuickStats] = useState<QuickStatsResponse>({
+    successRate: 0,
+    avgDuration: 0,
+    agentUtilization: 0,
+  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+
+        // Fetch all data in parallel
+        const [statsRes, recentRes, quickRes] = await Promise.all([
+          fetch("/api/dashboard/stats"),
+          fetch("/api/dashboard/recent-activity"),
+          fetch("/api/dashboard/quick-stats"),
+        ])
+
+        if (!statsRes.ok || !recentRes.ok || !quickRes.ok) {
+          throw new Error("Failed to fetch dashboard data")
+        }
+
+        const statsData: StatsResponse = await statsRes.json()
+        const recentData = await recentRes.json()
+        const quickData: QuickStatsResponse = await quickRes.json()
+
+        // Format stats for display
+        const formattedStats: StatCard[] = [
+          {
+            title: "Total Calls",
+            value: statsData.totalCalls.toLocaleString(),
+            change: "+0", // You can add previous data comparison here
+          },
+          {
+            title: "Active Agents",
+            value: statsData.activeAgents.toString(),
+            change: "+0",
+          },
+          {
+            title: "Total Minutes",
+            value: statsData.totalMinutes.toLocaleString(),
+            change: "+0",
+          },
+          {
+            title: "Revenue",
+            value: `$${statsData.revenue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+            change: "+0",
+          },
+        ]
+
+        setStats(formattedStats)
+        setRecentCalls(recentData.calls || [])
+        setQuickStats(quickData)
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err)
+        setError(err instanceof Error ? err.message : "Failed to load dashboard data")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+    
+    // Set up auto-refresh every 30 seconds
+    const interval = setInterval(fetchDashboardData, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="min-h-screen px-4 py-6 md:px-8 md:py-8">
+      {/* Error Alert */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg text-red-400 text-sm">
+          <p className="font-semibold">Error loading dashboard data</p>
+          <p>{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div className="flex-1">
@@ -50,7 +132,9 @@ export default function AdminDashboard() {
               <CardDescription className="font-mono text-xs uppercase text-neutral-500">{stat.title}</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
-              <div className="text-3xl font-bold text-white">{stat.value}</div>
+              <div className="text-3xl font-bold text-white">
+                {isLoading ? <Skeleton className="h-8 w-24 mx-auto bg-neutral-700" /> : stat.value}
+              </div>
               <p className="text-sm text-green-500 mt-1">{stat.change}</p>
             </CardContent>
           </Card>
@@ -67,30 +151,54 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[
-                { caller: "+1 555-0123", agent: "GPT-4", duration: "2:34", status: "Completed", time: "2 min ago" },
-                { caller: "+1 555-0456", agent: "Claude", duration: "1:12", status: "Completed", time: "15 min ago" },
-                { caller: "+1 555-0789", agent: "GPT-4", duration: "3:45", status: "In Progress", time: "Just now" },
-                { caller: "+1 555-0321", agent: "Claude", duration: "0:45", status: "Completed", time: "1 hour ago" },
-              ].map((call, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-lg hover:bg-neutral-800 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <p className="font-mono text-sm text-white">{call.caller}</p>
-                      <p className="text-xs text-neutral-500">{call.agent} • {call.time}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-mono text-sm text-white">{call.duration}</p>
-                    <p className={`text-xs ${call.status === "Completed" ? "text-green-500" : "text-yellow-500"}`}>
-                      {call.status}
-                    </p>
-                  </div>
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-20 w-full bg-neutral-700" />
+                ))
+              ) : recentCalls.length === 0 ? (
+                <div className="text-center py-8 text-neutral-500">
+                  <p>No recent activity</p>
                 </div>
-              ))}
+              ) : (
+                recentCalls.map((call, i) => {
+                  const startTime = new Date(call.start_time)
+                  const now = new Date()
+                  const diffMs = now.getTime() - startTime.getTime()
+                  const diffMins = Math.floor(diffMs / 60000)
+                  const diffHours = Math.floor(diffMs / 3600000)
+                  
+                  let timeAgo = "Just now"
+                  if (diffMins > 60) {
+                    timeAgo = `${diffHours}h ago`
+                  } else if (diffMins > 0) {
+                    timeAgo = `${diffMins}m ago`
+                  }
+
+                  const durationMinutes = Math.floor(call.duration / 60)
+                  const durationSeconds = call.duration % 60
+                  const durationStr = `${durationMinutes}:${durationSeconds.toString().padStart(2, "0")}`
+
+                  return (
+                    <div
+                      key={i}
+                      className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-lg hover:bg-neutral-800 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div>
+                          <p className="font-mono text-sm text-white">{call.caller_number}</p>
+                          <p className="text-xs text-neutral-500">{call.agent_id} • {timeAgo}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-mono text-sm text-white">{durationStr}</p>
+                        <p className={`text-xs ${call.status?.toLowerCase() === "completed" ? "text-green-500" : "text-yellow-500"}`}>
+                          {call.status}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                })
+              )}
             </div>
           </CardContent>
         </Card>
@@ -106,28 +214,43 @@ export default function AdminDashboard() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-neutral-400">Success Rate</span>
-                  <span className="text-sm font-bold text-white">94%</span>
+                  <span className="text-sm font-bold text-white">
+                    {isLoading ? "-" : `${quickStats.successRate.toFixed(1)}%`}
+                  </span>
                 </div>
                 <div className="w-full bg-neutral-800 rounded-full h-2">
-                  <div className="bg-green-500 h-2 rounded-full" style={{ width: "94%" }}></div>
+                  <div
+                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: isLoading ? "0%" : `${quickStats.successRate}%` }}
+                  ></div>
                 </div>
               </div>
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-neutral-400">Avg Call Duration</span>
-                  <span className="text-sm font-bold text-white">2:45</span>
+                  <span className="text-sm font-bold text-white">
+                    {isLoading ? "-" : `${Math.floor(quickStats.avgDuration)}:${Math.round((quickStats.avgDuration % 1) * 60).toString().padStart(2, "0")}`}
+                  </span>
                 </div>
                 <div className="w-full bg-neutral-800 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "68%" }}></div>
+                  <div
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: isLoading ? "0%" : `${Math.min(quickStats.avgDuration * 5, 100)}%` }}
+                  ></div>
                 </div>
               </div>
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-neutral-400">Agent Utilization</span>
-                  <span className="text-sm font-bold text-white">87%</span>
+                  <span className="text-sm font-bold text-white">
+                    {isLoading ? "-" : `${quickStats.agentUtilization.toFixed(1)}%`}
+                  </span>
                 </div>
                 <div className="w-full bg-neutral-800 rounded-full h-2">
-                  <div className="bg-purple-500 h-2 rounded-full" style={{ width: "87%" }}></div>
+                  <div
+                    className="bg-purple-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: isLoading ? "0%" : `${quickStats.agentUtilization}%` }}
+                  ></div>
                 </div>
               </div>
             </div>
