@@ -5,6 +5,7 @@ import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AdminConsoleButton } from "@/components/admin-console-button"
+import { LogoHeader } from "@/components/logo-header"
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -37,6 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <LogoHeader />
           <AdminConsoleButton />
           {children}
           <Toaster />
