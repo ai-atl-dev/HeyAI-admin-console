@@ -11,19 +11,19 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen px-4 py-6 md:px-8 md:py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-neutral-400 font-mono text-sm">Overview of your Hey AI usage and performance</p>
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-neutral-400 font-mono text-xs md:text-sm">Overview of your Hey AI usage and performance</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="relative">
+          <div className="relative w-full md:w-auto">
             <input
               type="search"
               placeholder="Search..."
-              className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 pl-10 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary w-64"
+              className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 pl-10 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-64"
             />
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500"
