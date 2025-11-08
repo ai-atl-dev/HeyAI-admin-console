@@ -4,6 +4,7 @@ import { Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AdminConsoleButton } from "@/components/admin-console-button"
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -36,6 +37,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AdminConsoleButton />
           {children}
           <Toaster />
         </ThemeProvider>
