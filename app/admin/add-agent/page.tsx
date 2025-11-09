@@ -109,8 +109,8 @@ export default function AddAgent() {
                   Provider
                 </Label>
                 <Input
-                  id="provider"
-                  placeholder="e.g., OpenAI, Anthropic, Google"
+                  id="Url"
+                  placeholder="e.g.,  https://abc-agent-12345625541.us-central1.run.app/"
                   value={formData.provider}
                   onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
                   required
