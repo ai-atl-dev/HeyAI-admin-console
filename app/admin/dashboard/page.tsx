@@ -10,7 +10,6 @@ export default function AdminDashboard() {
     { title: "Total Calls", value: "Loading...", change: "-" },
     { title: "Active Agents", value: "Loading...", change: "-" },
     { title: "Total Minutes", value: "Loading...", change: "-" },
-    { title: "Revenue", value: "Loading...", change: "-" },
   ])
   const [recentCalls, setRecentCalls] = useState<RecentCall[]>([])
   const [quickStats, setQuickStats] = useState<QuickStatsResponse>({
@@ -57,11 +56,6 @@ export default function AdminDashboard() {
           {
             title: "Total Minutes",
             value: statsData.totalMinutes.toLocaleString(),
-            change: "+0",
-          },
-          {
-            title: "Revenue",
-            value: `$${statsData.revenue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
             change: "+0",
           },
         ]
@@ -125,7 +119,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {stats.map((stat) => (
           <Card key={stat.title} className="bg-neutral-900 border-neutral-800 hover:border-neutral-700 transition-colors">
             <CardHeader className="pb-2 text-center">
@@ -133,7 +127,11 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="text-center">
               <div className="text-3xl font-bold text-white">
-                {isLoading ? <Skeleton className="h-8 w-24 mx-auto bg-neutral-700" /> : stat.value}
+                {isLoading ? (
+                  <span className="font-mono text-sm text-neutral-500">Loading...</span>
+                ) : (
+                  stat.value
+                )}
               </div>
               <p className="text-sm text-green-500 mt-1">{stat.change}</p>
             </CardContent>
@@ -142,9 +140,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Activity - Takes 2 columns */}
-        <Card className="bg-neutral-900 border-neutral-800 lg:col-span-2">
+      <div className="grid grid-cols-1 gap-6">
+        {/* Recent Activity */}
+        <Card className="bg-neutral-900 border-neutral-800">
           <CardHeader>
             <CardTitle className="text-white font-semibold">Recent Activity</CardTitle>
             <CardDescription className="font-mono text-xs text-neutral-500">Latest calls and interactions</CardDescription>
@@ -200,60 +198,6 @@ export default function AdminDashboard() {
                   )
                 })
               )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats */}
-        <Card className="bg-neutral-900 border-neutral-800">
-          <CardHeader>
-            <CardTitle className="text-white font-semibold">Quick Stats</CardTitle>
-            <CardDescription className="font-mono text-xs text-neutral-500">Today's overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-neutral-400">Success Rate</span>
-                  <span className="text-sm font-bold text-white">
-                    {isLoading ? "-" : `${quickStats.successRate.toFixed(1)}%`}
-                  </span>
-                </div>
-                <div className="w-full bg-neutral-800 rounded-full h-2">
-                  <div
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: isLoading ? "0%" : `${quickStats.successRate}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-neutral-400">Avg Call Duration</span>
-                  <span className="text-sm font-bold text-white">
-                    {isLoading ? "-" : `${Math.floor(quickStats.avgDuration)}:${Math.round((quickStats.avgDuration % 1) * 60).toString().padStart(2, "0")}`}
-                  </span>
-                </div>
-                <div className="w-full bg-neutral-800 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: isLoading ? "0%" : `${Math.min(quickStats.avgDuration * 5, 100)}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-neutral-400">Agent Utilization</span>
-                  <span className="text-sm font-bold text-white">
-                    {isLoading ? "-" : `${quickStats.agentUtilization.toFixed(1)}%`}
-                  </span>
-                </div>
-                <div className="w-full bg-neutral-800 rounded-full h-2">
-                  <div
-                    className="bg-purple-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: isLoading ? "0%" : `${quickStats.agentUtilization}%` }}
-                  ></div>
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
