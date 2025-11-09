@@ -11,9 +11,9 @@ export function AdminSidebar() {
   ]
 
   const collectionLinks = [
-    { href: "/admin/add-agent", label: "Add Agent", icon: "➕" },
-    { href: "/admin/existing-agents", label: "Existing Agents", icon: "🤖" },
-    { href: "/admin/payment", label: "Payment", icon: "💳" },
+    { href: "/admin/add-agent", label: "Add Agent" },
+    { href: "/admin/existing-agents", label: "Existing Agents" },
+    { href: "/admin/payment", label: "Payment" },
   ]
 
   return (
@@ -33,7 +33,6 @@ export function AdminSidebar() {
                   : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
                   }`}
               >
-                <span>{link.icon}</span>
                 <span>{link.label}</span>
               </Link>
             ))}
@@ -53,7 +52,6 @@ export function AdminSidebar() {
                   : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
                   }`}
               >
-                <span>{link.icon}</span>
                 <span>{link.label}</span>
               </Link>
             ))}

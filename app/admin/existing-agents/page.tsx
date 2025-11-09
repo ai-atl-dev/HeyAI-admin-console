@@ -15,9 +15,16 @@ interface Agent {
   status: "active" | "inactive"
 }
 
+interface LiveUsersData {
+  liveUsers: number
+  byAgent: Record<string, number>
+}
+
 export default function ExistingAgents() {
   const [agents, setAgents] = useState<Agent[]>([])
   const [loading, setLoading] = useState(true)
+  const [liveUsers, setLiveUsers] = useState<number>(0)
+  const [liveUsersByAgent, setLiveUsersByAgent] = useState<Record<string, number>>({})
   const { toast } = useToast()
 
   useEffect(() => {
@@ -57,7 +64,25 @@ export default function ExistingAgents() {
       }
     }
 
+    const fetchLiveUsers = async () => {
+      try {
+        const response = await fetch("/api/live-users")
+        const data = await response.json()
+        if (data.success) {
+          setLiveUsers(data.liveUsers)
+          setLiveUsersByAgent(data.byAgent || {})
+        }
+      } catch (error) {
+        console.error("Error fetching live users:", error)
+      }
+    }
+
     fetchAgents()
+    fetchLiveUsers()
+
+    // Poll live users every 5 seconds
+    const interval = setInterval(fetchLiveUsers, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleDelete = async (id: string, name: string) => {
@@ -147,10 +172,20 @@ export default function ExistingAgents() {
     <div className="min-h-screen pt-32 pb-16">
       <div className="container max-w-5xl">
         <div className="mb-8">
-          <h1 className="text-4xl font-sentient mb-2">Existing Agents</h1>
-          <p className="text-foreground/60 font-mono text-sm">
-            Manage your registered AI agents for voice interactions
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-sentient mb-2">Existing Agents</h1>
+              <p className="text-foreground/60 font-mono text-sm">
+                Manage your registered AI agents for voice interactions
+              </p>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-green-400 font-mono text-sm">
+                {liveUsers} {liveUsers === 1 ? "user" : "users"} live
+              </span>
+            </div>
+          </div>
         </div>
 
         {agents.length === 0 ? (
@@ -177,17 +212,22 @@ export default function ExistingAgents() {
                       <div className="flex items-center gap-3">
                         <CardTitle className="font-sentient text-foreground">{agent.name}</CardTitle>
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-mono ${
-                            agent.status === "active"
-                              ? "bg-green-500/20 text-green-400"
-                              : "bg-neutral-500/20 text-neutral-400"
-                          }`}
+                          className={`px-2 py-1 rounded-full text-xs font-mono ${agent.status === "active"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-neutral-500/20 text-neutral-400"
+                            }`}
                         >
                           {agent.status}
                         </span>
+                        {liveUsersByAgent[agent.id] > 0 && (
+                          <span className="flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-xs font-mono text-blue-400">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+                            {liveUsersByAgent[agent.id]} live
+                          </span>
+                        )}
                       </div>
                       <CardDescription className="font-mono text-xs mt-1 text-muted-foreground">
-                        Provider: {agent.provider} • Created: {agent.createdAt}
+                        Provider: {agent.provider} • Created: {agent.createdAt} • Active Users: {liveUsersByAgent[agent.id] || 0}
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
