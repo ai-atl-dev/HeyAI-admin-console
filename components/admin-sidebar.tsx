@@ -7,12 +7,13 @@ export function AdminSidebar() {
   const pathname = usePathname()
 
   const workspaceLinks = [
-    { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
-    { href: "/admin/live", label: "Live Monitor", icon: "🔴", animated: true },
+    { href: "/admin/dashboard", label: "Dashboard" },
+    { href: "/admin/live", label: "Live Monitor", animated: true },
   ]
 
   const collectionLinks = [
     { href: "/admin/add-agent", label: "Add Agent", icon: "➕" },
+    { href: "/admin/existing-agents", label: "Existing Agents", icon: "🤖" },
     { href: "/admin/payment", label: "Payment", icon: "💳" },
   ]
 
