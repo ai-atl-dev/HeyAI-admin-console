@@ -17,12 +17,14 @@ interface Agent {
 
 interface LiveUsersData {
   liveUsers: number
+  byAgent: Record<string, number>
 }
 
 export default function ExistingAgents() {
   const [agents, setAgents] = useState<Agent[]>([])
   const [loading, setLoading] = useState(true)
   const [liveUsers, setLiveUsers] = useState<number>(0)
+  const [liveUsersByAgent, setLiveUsersByAgent] = useState<Record<string, number>>({})
   const { toast } = useToast()
 
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function ExistingAgents() {
         const data = await response.json()
         if (data.success) {
           setLiveUsers(data.liveUsers)
+          setLiveUsersByAgent(data.byAgent || {})
         }
       } catch (error) {
         console.error("Error fetching live users:", error)
@@ -216,6 +219,12 @@ export default function ExistingAgents() {
                         >
                           {agent.status}
                         </span>
+                        {liveUsersByAgent[agent.id] > 0 && (
+                          <span className="flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-xs font-mono text-blue-400">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+                            {liveUsersByAgent[agent.id]} live
+                          </span>
+                        )}
                       </div>
                       <CardDescription className="font-mono text-xs mt-1 text-muted-foreground">
                         Provider: {agent.provider} • Created: {agent.createdAt}

@@ -21,6 +21,7 @@ export async function GET() {
         return NextResponse.json({
             success: true,
             liveUsers: data.liveUsers || 0,
+            byAgent: data.byAgent || {},
         });
     } catch (error) {
         console.error("Error fetching live users:", error);
@@ -28,6 +29,7 @@ export async function GET() {
             {
                 success: false,
                 liveUsers: 0,
+                byAgent: {},
                 error: error instanceof Error ? error.message : "Failed to fetch live users",
             },
             { status: 500 }
