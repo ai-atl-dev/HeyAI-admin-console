@@ -105,7 +105,7 @@ export default function AddAgent() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="provider" className="font-mono text-sm text-foreground">
+                <Label htmlFor="Url" className="font-mono text-sm text-foreground">
                   Provider
                 </Label>
                 <Input
