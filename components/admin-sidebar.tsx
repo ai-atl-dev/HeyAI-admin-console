@@ -8,7 +8,7 @@ export function AdminSidebar() {
 
   const workspaceLinks = [
     { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
-    { href: "/admin/live", label: "Live Monitor", icon: "🔴" },
+    { href: "/admin/live", label: "Live Monitor", icon: "🔴", animated: true },
   ]
 
   const collectionLinks = [
@@ -29,8 +29,8 @@ export function AdminSidebar() {
                 key={link.href}
                 href={link.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${pathname === link.href
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
+                  ? "bg-neutral-800 text-white"
+                  : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
                   }`}
               >
                 <span>{link.icon}</span>
@@ -49,8 +49,8 @@ export function AdminSidebar() {
                 key={link.href}
                 href={link.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${pathname === link.href
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
+                  ? "bg-neutral-800 text-white"
+                  : "text-neutral-400 hover:text-white hover:bg-neutral-800/50"
                   }`}
               >
                 <span>{link.icon}</span>
