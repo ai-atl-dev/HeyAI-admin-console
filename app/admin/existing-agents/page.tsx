@@ -227,7 +227,7 @@ export default function ExistingAgents() {
                         )}
                       </div>
                       <CardDescription className="font-mono text-xs mt-1 text-muted-foreground">
-                        Provider: {agent.provider} • Created: {agent.createdAt}
+                        Provider: {agent.provider} • Created: {agent.createdAt} • Active Users: {liveUsersByAgent[agent.id] || 0}
                       </CardDescription>
                     </div>
                     <div className="flex gap-2">
