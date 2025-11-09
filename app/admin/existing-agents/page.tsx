@@ -211,6 +211,9 @@ export default function ExistingAgents() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
                         <CardTitle className="font-sentient text-foreground">{agent.name}</CardTitle>
+                        <span className="px-2 py-1 bg-neutral-800 border border-neutral-700 rounded text-xs font-mono text-neutral-400">
+                          +1 (470) 123-1234
+                        </span>
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-mono ${agent.status === "active"
                             ? "bg-green-500/20 text-green-400"
