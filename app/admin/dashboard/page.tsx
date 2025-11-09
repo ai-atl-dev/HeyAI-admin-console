@@ -78,14 +78,14 @@ export default function AdminDashboard() {
     }
 
     fetchDashboardData()
-    
+
     // Set up auto-refresh every 30 seconds
     const interval = setInterval(fetchDashboardData, 30000)
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <div className="min-h-screen px-4 py-6 md:px-8 md:py-8">
+    <div className="min-h-screen px-4 md:px-8 pt-20 md:pt-24 pb-6 md:pb-8">
       {/* Error Alert */}
       {error && (
         <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg text-red-400 text-sm">
@@ -156,8 +156,9 @@ export default function AdminDashboard() {
                   <Skeleton key={i} className="h-20 w-full bg-neutral-700" />
                 ))
               ) : recentCalls.length === 0 ? (
-                <div className="text-center py-8 text-neutral-500">
-                  <p>No recent activity</p>
+                <div className="text-center py-12 text-neutral-500">
+                  <p className="font-mono text-sm">No recent activity</p>
+                  <p className="text-xs mt-2 text-neutral-600">Activity will populate when there are calls</p>
                 </div>
               ) : (
                 recentCalls.map((call, i) => {
@@ -166,7 +167,7 @@ export default function AdminDashboard() {
                   const diffMs = now.getTime() - startTime.getTime()
                   const diffMins = Math.floor(diffMs / 60000)
                   const diffHours = Math.floor(diffMs / 3600000)
-                  
+
                   let timeAgo = "Just now"
                   if (diffMins > 60) {
                     timeAgo = `${diffHours}h ago`

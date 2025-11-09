@@ -2,55 +2,42 @@ import { NextResponse } from "next/server";
 import { getBigQueryClient, DATASET } from "@/lib/bigquery";
 import { StatsResponse } from "@/types/dashboard";
 
-export async function GET(): Promise<NextResponse<StatsResponse>> {
+export async function GET() {
   try {
     const bigquery = getBigQueryClient();
 
-    // Query for total calls and revenue
-    const totalCallsQuery = `
-      SELECT 
-        COUNT(*) as total_calls,
-        COALESCE(SUM(cost), 0) as total_revenue
-      FROM \`${DATASET}.calls\`
-    `;
+    // Query for total calls
+    const [totalCallsRows] = await bigquery.query({
+      query: `SELECT COUNT(*) as total FROM \`${DATASET}.calls\``,
+    });
+    const totalCalls = totalCallsRows[0]?.total || 0;
 
     // Query for active agents today
-    const activeAgentsQuery = `
-      SELECT COUNT(DISTINCT agent_id) as active_agents
-      FROM \`${DATASET}.calls\`
-      WHERE DATE(start_time) = CURRENT_DATE()
-    `;
+    const [activeAgentsRows] = await bigquery.query({
+      query: `
+        SELECT COUNT(DISTINCT agent_id) as active
+        FROM \`${DATASET}.calls\`
+        WHERE DATE(start_time) = CURRENT_DATE()
+      `,
+    });
+    const activeAgents = activeAgentsRows[0]?.active || 0;
 
     // Query for total minutes
-    const totalMinutesQuery = `
-      SELECT COALESCE(SUM(duration) / 60, 0) as total_minutes
-      FROM \`${DATASET}.calls\`
-    `;
-
-    // Execute all queries in parallel
-    const [totalCallsResults, activeAgentsResults, totalMinutesResults] = await Promise.all([
-      bigquery.query({ query: totalCallsQuery }),
-      bigquery.query({ query: activeAgentsQuery }),
-      bigquery.query({ query: totalMinutesQuery }),
-    ]);
-
-    const totalCallsRow = totalCallsResults[0][0] || {};
-    const activeAgentsRow = activeAgentsResults[0][0] || {};
-    const totalMinutesRow = totalMinutesResults[0][0] || {};
-
-    const totalCalls = Number(totalCallsRow.total_calls || 0);
-    const activeAgents = Number(activeAgentsRow.active_agents || 0);
-    const totalMinutes = Math.round(Number(totalMinutesRow.total_minutes || 0));
-    const revenue = Number(totalCallsRow.total_revenue || 0);
-
-    return NextResponse.json({
-      totalCalls,
-      activeAgents,
-      totalMinutes,
-      revenue,
+    const [totalMinutesRows] = await bigquery.query({
+      query: `SELECT SUM(duration) / 60 as minutes FROM \`${DATASET}.calls\``,
     });
+    const totalMinutes = Math.round(totalMinutesRows[0]?.minutes || 0);
+
+    const response: StatsResponse = {
+      totalCalls: Number(totalCalls),
+      activeAgents: Number(activeAgents),
+      totalMinutes,
+      revenue: 0,
+    };
+
+    return NextResponse.json(response);
   } catch (error) {
-    console.error("Error fetching stats:", error);
+    console.error("Error fetching dashboard stats:", error);
     return NextResponse.json(
       {
         totalCalls: 0,
@@ -58,7 +45,7 @@ export async function GET(): Promise<NextResponse<StatsResponse>> {
         totalMinutes: 0,
         revenue: 0,
         error: error instanceof Error ? error.message : "Failed to fetch stats",
-      },
+      } as StatsResponse,
       { status: 500 }
     );
   }
