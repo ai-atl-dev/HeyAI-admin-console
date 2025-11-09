@@ -7,7 +7,7 @@ Three API endpoints power the admin dashboard, fetching real-time data from BigQ
 ## Endpoints
 
 ### 1. `/api/dashboard/stats`
-
+HIHIHIHIHI
 **Method:** GET
 
 **Description:** Returns top-level statistics for the dashboard cards.
