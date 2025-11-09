@@ -1,6 +1,16 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export const AdminConsoleButton = () => {
+  const pathname = usePathname()
+
+  // Hide the button if user is inside admin console
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
+
   return (
     <div className="fixed z-50 pt-4 md:pt-6 top-0 right-0 px-6 md:px-12 lg:px-16">
       <div className="flex items-center gap-2">
