@@ -8,7 +8,6 @@ export function AdminSidebar() {
 
   const workspaceLinks = [
     { href: "/admin/dashboard", label: "Dashboard" },
-    { href: "/admin/live", label: "Live Monitor", animated: true },
   ]
 
   const collectionLinks = [
