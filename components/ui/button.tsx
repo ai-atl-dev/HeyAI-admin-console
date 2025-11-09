@@ -10,8 +10,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-background border-primary text-primary-foreground [&>[data-border]]:bg-primary [box-shadow:inset_0_0_54px_0px_var(--tw-shadow-color)] shadow-[#EBB800] hover:shadow-[#EBB800]/80",
-      },
+        default: "bg-[#FFC107] border-[#FFC107] text-black [&>[data-border]]:bg-[#FFC107] [box-shadow:inset_0_0_54px_0px_#FFC107] shadow-[#FFC107]",
+},
       size: {
         default: "h-16 px-6 text-base",
         sm: "h-14 px-6 text-sm",
