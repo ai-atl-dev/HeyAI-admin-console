@@ -22,14 +22,55 @@ export default function AddAgent() {
     e.preventDefault()
     setLoading(true)
 
-    setTimeout(() => {
-      toast({
-        title: "Agent added successfully!",
-        description: `${formData.name} has been added to your agents.`,
+    try {
+      // Generate a unique agent ID
+      const agentId = `agent_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+
+      const response = await fetch("/api/agents/upsert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          agent_id: agentId,
+          agent_name: formData.name,
+          status: "active",
+          voice_model: formData.provider,
+          language: "en-US",
+          max_concurrent_calls: 1,
+          config: {
+            api_key: formData.apiKey,
+            provider: formData.provider,
+          },
+        }),
       })
-      setFormData({ name: "", apiKey: "", provider: "" })
+
+      const data = await response.json()
+
+      console.log("API Response:", { status: response.status, data })
+
+      if (response.ok && data.success) {
+        toast({
+          title: "Agent added successfully!",
+          description: `${formData.name} has been added to your agents.`,
+        })
+        setFormData({ name: "", apiKey: "", provider: "" })
+      } else {
+        const errorMsg = data.error || data.message || "Failed to add agent"
+        console.error("API Error:", errorMsg)
+        throw new Error(errorMsg)
+      }
+    } catch (error) {
+      console.error("Error adding agent:", error)
+      const errorMessage = error instanceof Error ? error.message : "Failed to add agent. Please try again."
+      toast({
+        title: "Error adding agent",
+        description: errorMessage,
+        variant: "destructive",
+      })
+    } finally {
       setLoading(false)
-    }, 1000)
+    }
   }
 
   return (
@@ -40,15 +81,17 @@ export default function AddAgent() {
           <p className="text-foreground/60 font-mono text-sm">Configure a new AI agent for voice interactions</p>
         </div>
 
-        <Card className="bg-background border-border">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="font-sentient">Agent Configuration</CardTitle>
-            <CardDescription className="font-mono text-xs">Enter the details for your new AI agent</CardDescription>
+            <CardTitle className="font-sentient text-foreground">Agent Configuration</CardTitle>
+            <CardDescription className="font-mono text-xs text-muted-foreground">
+              Enter the details for your new AI agent
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name" className="font-mono text-sm">
+                <Label htmlFor="name" className="font-mono text-sm text-foreground">
                   Agent Name
                 </Label>
                 <Input
@@ -57,12 +100,12 @@ export default function AddAgent() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
-                  className="bg-background border-border"
+                  className="text-foreground"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="provider" className="font-mono text-sm">
+                <Label htmlFor="provider" className="font-mono text-sm text-foreground">
                   Provider
                 </Label>
                 <Input
@@ -71,12 +114,12 @@ export default function AddAgent() {
                   value={formData.provider}
                   onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
                   required
-                  className="bg-background border-border"
+                  className="text-foreground"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="apiKey" className="font-mono text-sm">
+                <Label htmlFor="apiKey" className="font-mono text-sm text-foreground">
                   API Key
                 </Label>
                 <Input
@@ -86,11 +129,15 @@ export default function AddAgent() {
                   value={formData.apiKey}
                   onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
                   required
-                  className="bg-background border-border"
+                  className="text-foreground"
                 />
               </div>
 
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-yellow-400 text-black hover:bg-yellow-500 font-mono"
+              >
                 {loading ? "Adding Agent..." : "[Add Agent]"}
               </Button>
             </form>

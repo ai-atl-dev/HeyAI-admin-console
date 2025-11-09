@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,6 +18,27 @@ export default function Payment() {
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
 
+  const [totalCost, setTotalCost] = useState(0)
+
+  useEffect(() => {
+    // Fetch total cost from calls
+    const fetchTotalCost = async () => {
+      try {
+        const response = await fetch("/api/calls/history?limit=1000")
+        const data = await response.json()
+
+        if (response.ok && data.success) {
+          const total = data.calls.reduce((sum: number, call: any) => sum + (call.cost || 0), 0)
+          setTotalCost(total)
+        }
+      } catch (error) {
+        console.error("Error fetching costs:", error)
+      }
+    }
+
+    fetchTotalCost()
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -28,7 +49,7 @@ export default function Payment() {
 
       toast({
         title: "Payment processed!",
-        description: `$${formData.amount} has been charged successfully.`,
+        description: `$${formData.amount} has been added to your balance.`,
       })
       setFormData({ userId: "", amount: "", method: "" })
     } catch (error) {
@@ -51,26 +72,32 @@ export default function Payment() {
         </div>
 
         <div className="grid gap-6">
-          <Card className="bg-background border-border">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="font-sentient">Current Balance</CardTitle>
-              <CardDescription className="font-mono text-xs">Your account balance and credits</CardDescription>
+              <CardTitle className="font-sentient text-foreground">Current Balance</CardTitle>
+              <CardDescription className="font-mono text-xs text-muted-foreground">
+                Your account balance and credits
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-primary mb-2">$247.50</div>
-              <p className="text-sm text-foreground/60 font-mono">Available credits</p>
+              <div className="text-4xl font-bold text-yellow-400 mb-2">
+                ${totalCost.toFixed(2)}
+              </div>
+              <p className="text-sm text-foreground/60 font-mono">Total spent on calls</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-background border-border">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="font-sentient">Add Funds</CardTitle>
-              <CardDescription className="font-mono text-xs">Top up your account balance</CardDescription>
+              <CardTitle className="font-sentient text-foreground">Add Funds</CardTitle>
+              <CardDescription className="font-mono text-xs text-muted-foreground">
+                Top up your account balance
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="userId" className="font-mono text-sm">
+                  <Label htmlFor="userId" className="font-mono text-sm text-foreground">
                     User ID
                   </Label>
                   <Input
@@ -79,12 +106,12 @@ export default function Payment() {
                     value={formData.userId}
                     onChange={(e) => setFormData({ ...formData, userId: e.target.value })}
                     required
-                    className="bg-background border-border"
+                    className="text-foreground"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="amount" className="font-mono text-sm">
+                  <Label htmlFor="amount" className="font-mono text-sm text-foreground">
                     Amount ($)
                   </Label>
                   <Input
@@ -95,12 +122,12 @@ export default function Payment() {
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
-                    className="bg-background border-border"
+                    className="text-foreground"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="method" className="font-mono text-sm">
+                  <Label htmlFor="method" className="font-mono text-sm text-foreground">
                     Payment Method
                   </Label>
                   <Input
@@ -109,11 +136,15 @@ export default function Payment() {
                     value={formData.method}
                     onChange={(e) => setFormData({ ...formData, method: e.target.value })}
                     required
-                    className="bg-background border-border"
+                    className="text-foreground"
                   />
                 </div>
 
-                <Button type="submit" disabled={loading} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-yellow-400 text-black hover:bg-yellow-500 font-mono"
+                >
                   {loading ? "Processing..." : "[Process Payment]"}
                 </Button>
               </form>
