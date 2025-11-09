@@ -19,9 +19,10 @@ export function Hero() {
 
       <div className="flex-1 flex flex-col items-center justify-start pt-24 text-center relative z-10">
         <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight mt-24 drop-shadow-lg neon-glow-heading" style={{ fontFamily: "'Playfair Display', serif" }}>
-          AI that talks, texts and gets it done
+          We give voice to your ai agents
         </h1>
         <p className="font-mono text-sm sm:text-base text-white text-balance mt-8 max-w-[440px] mx-auto drop-shadow-md">
+          and a phone number to call them!
           Complete tasks over a phone call — send emails, read messages, or execute commands using advanced AI models
         </p>
       </div>
