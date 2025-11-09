@@ -1,488 +1,353 @@
-# 🎙️ HeyAI - Give Voice to Your AI Agents
+# HeyAI Admin Console
 
-> **Transform your AI agents into voice-powered assistants that people can actually call.**
+![Architecture](architecture.png)
 
-HeyAI is a complete voice API platform that gives your AI agents a phone number and a voice. Users can call your AI, have natural conversations, and get tasks done - all through a simple phone call.
+Voice-enabled AI assistant management platform. This admin console provides a comprehensive dashboard for managing AI agents, monitoring live calls, viewing analytics, and tracking usage for the HeyAI voice API platform.
 
----
+## Overview
 
-## 🤔 What Problem Does HeyAI Solve?
+HeyAI Admin Console is a Next.js-based web application that serves as the control center for managing voice-enabled AI agents. Users can create agents, monitor active calls in real-time, view detailed analytics, and manage billing through an intuitive interface.
 
-Imagine you have a powerful AI agent that can:
-- Schedule appointments
-- Answer customer support questions
-- Process orders
-- Provide information
+## Architecture
 
-**The Problem**: Users can only interact with it through text (chat, website forms, etc.)
+The system integrates multiple components to provide a complete voice AI management solution:
 
-**The Solution**: HeyAI gives your AI agent:
-- ☎️ A real phone number people can call
-- 🗣️ A natural voice to speak with
-- 🎧 Ability to understand spoken language
-- 📊 Analytics and monitoring dashboard
+### System Flow
 
----
+1. **User Management**: Admin creates and configures AI agents through the web interface
+2. **Call Routing**: Twilio routes incoming calls to the appropriate agent based on phone number
+3. **Backend Processing**: Go server handles call orchestration, speech processing, and AI inference
+4. **Real-time Monitoring**: Dashboard displays live call metrics and agent status
+5. **Data Storage**: BigQuery stores call logs, agent configurations, and analytics data
+6. **Analytics**: Dashboard aggregates and visualizes usage patterns and performance metrics
 
-## 🎯 How It Works (Simple Overview)
+### Component Integration
 
 ```
-┌─────────────┐      ┌──────────────┐      ┌─────────────┐      ┌──────────────┐
-│   Person    │─────▶│   HeyAI      │─────▶│  Your AI    │─────▶│   Action     │
-│  📱 Calls   │      │  Voice API   │      │   Agent     │      │  ✅ Done     │
-└─────────────┘      └──────────────┘      └─────────────┘      └──────────────┘
-                           │
-                           ▼
-                     ┌──────────────┐
-                     │  Dashboard   │
-                     │  📊 Monitor  │
-                     └──────────────┘
+Admin Console (Next.js) ↔ BigQuery ↔ Dashboard Backend
+                                ↓
+                         Analytics & Logs
+                                ↓
+                    HeyAI Backend (Go) ↔ External AI Agents
+                                ↓
+                         Twilio Voice API
+                                ↓
+                            End Users
 ```
 
-1. **User calls** your AI's phone number
-2. **HeyAI receives** the call and transcribes speech to text
-3. **Your AI agent** processes the request
-4. **HeyAI converts** AI's response to voice
-5. **User hears** the response naturally
-6. **You monitor** everything from the dashboard
+## Technology Stack
 
----
+### Frontend Framework
 
-## ✨ Key Features
+- **Next.js 15**: React framework with App Router for server-side rendering and API routes
+- **TypeScript**: Type-safe development with full IDE support
+- **Tailwind CSS v4**: Utility-first CSS framework for responsive design
+- **React 19**: Latest React features including Server Components
 
-### 🎨 Beautiful Landing Page
-- **3D Particle System**: Stunning WebGL-powered background with 60fps animations
-- **Siri-like Voice Animation**: Real-time audio waveform visualization
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+### UI Components
 
-### 🛠️ Powerful Admin Dashboard
-- **📱 Agent Management**: Create and configure multiple AI voice agents
-- **📊 Live Call Monitoring**: See active calls in real-time
-- **📈 Usage Analytics**: Track calls, duration, costs, and success rates
-- **💰 Payment Dashboard**: Monitor spending and billing
-- **📜 Call History**: Complete audit trail of all interactions
+- **Radix UI**: Accessible, unstyled component primitives
+- **Lucide Icons**: Modern icon library
+- **Recharts**: Composable charting library for analytics visualization
+- **Three.js + React Three Fiber**: 3D graphics for landing page animations
 
-### 🔌 API Integration
-- **RESTful APIs**: Easy integration with any AI model (OpenAI, Anthropic, Google, etc.)
-- **Real-time Updates**: Live call status and monitoring
-- **BigQuery Backend**: Scalable data storage and analytics
+### Backend & Data
 
----
+- **Next.js API Routes**: Serverless API endpoints
+- **Google BigQuery**: Scalable data warehouse for analytics
+- **Google Cloud SDK**: BigQuery client library
+- **Server-Sent Events**: Real-time updates for live monitoring
 
-## 🏗️ Architecture
+### Development Tools
 
-### System Architecture
+- **ESLint**: Code linting and quality checks
+- **TypeScript**: Static type checking
+- **PostCSS**: CSS processing and optimization
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     HeyAI Platform                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────┐         ┌─────────────────┐             │
-│  │   Frontend   │◀────────│   API Routes    │             │
-│  │  (Next.js)   │         │  (Next.js API)  │             │
-│  └──────────────┘         └─────────────────┘             │
-│         │                          │                       │
-│         │                          ▼                       │
-│         │                  ┌──────────────┐               │
-│         │                  │  BigQuery DB │               │
-│         │                  │  (Analytics) │               │
-│         │                  └──────────────┘               │
-│         │                                                  │
-│  ┌──────▼──────────────────────────────────────┐         │
-│  │         Voice Processing Layer              │         │
-│  │  • Speech-to-Text (Transcription)          │         │
-│  │  • Text-to-Speech (Voice Synthesis)        │         │
-│  │  • Call Routing & Management               │         │
-│  └─────────────────────────────────────────────┘         │
-│                                                            │
-└────────────────────────────────────────────────────────────┘
-```
+## Features
 
-### Tech Stack
+### Implemented
 
-#### Frontend
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **UI Components**: Radix UI primitives
-- **3D Graphics**: Three.js + React Three Fiber
-- **State Management**: React Hooks
+- Agent management (create, update, delete, activate/deactivate)
+- Real-time live user tracking per agent
+- Dashboard with key metrics and analytics
+- Call history and usage tracking
+- Payment and billing overview
+- Responsive design for all screen sizes
+- Dark theme UI with modern aesthetics
+- BigQuery integration for data persistence
+- Live call monitoring with 5-second polling
+- Per-agent active user counts
+- 3D particle system landing page
+- Siri-like voice animation
 
-#### Backend & Data
-- **API**: Next.js API Routes (serverless)
-- **Database**: Google BigQuery (scalable analytics)
-- **Authentication**: Built-in session management
-- **Real-time**: Server-Sent Events (SSE) for live updates
+### Planned
 
-#### Voice Infrastructure
-- **Speech-to-Text**: Voice transcription engine
-- **Text-to-Speech**: Natural voice synthesis
-- **Call Routing**: Telephony integration
+- WebSocket integration for instant updates
+- Advanced filtering and search in call history
+- Export functionality for reports
+- Multi-user authentication and roles
+- Custom agent voice selection
+- Call recording playback
+- Real-time transcription display
+- Cost optimization recommendations
 
-### Database Schema
+## Configuration
 
-HeyAI uses **Google BigQuery** for scalable data storage:
+### Environment Variables
 
-**Tables:**
-- `agents` - AI agent configurations
-- `calls` - Call records and transcripts
-- `live_calls` - Active call monitoring
-- `usage_history` - Daily usage aggregates
-
-See `bigquery_schema.sql` for complete schema.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or pnpm
-- Google Cloud account (for BigQuery)
-
-### 1. Clone the Repository
+Required environment variables for production:
 
 ```bash
-git clone https://github.com/your-username/heyai-admin-console.git
-cd heyai-admin-console
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-# or
-pnpm install
-```
-
-### 3. Set Up BigQuery
-
-#### Create a Google Cloud Project
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (e.g., "heyai-backend")
-3. Enable BigQuery API
-
-#### Create a Service Account
-
-1. Go to IAM & Admin → Service Accounts
-2. Create a new service account
-3. Grant role: **BigQuery Admin**
-4. Create and download JSON key
-
-#### Create BigQuery Dataset and Tables
-
-1. Open BigQuery in Google Cloud Console
-2. Create a dataset named `agent_data`
-3. Run the SQL in `bigquery_schema.sql` to create tables
-
-### 4. Configure Environment Variables
-
-Create a `.env` file in the project root:
-
-```bash
-# API Security
-API_SECRET_KEY=your-secret-key-here
-
 # BigQuery Configuration
-BIGQUERY_PROJECT_ID=your-project-id
+BIGQUERY_PROJECT_ID=heyai-backend
 BIGQUERY_DATASET=agent_data
-BIGQUERY_CREDENTIALS={"type":"service_account","project_id":"your-project-id",...}
+BIGQUERY_CREDENTIALS={"type":"service_account",...}
+
+# Backend Integration
+BACKEND_URL=https://heyai-backend-127756525541.us-central1.run.app
+
+# API Security (optional)
+API_SECRET_KEY=your-secret-key
 ```
 
-**Important**:
-- Replace `your-project-id` with your Google Cloud project ID
-- Paste the entire JSON content from your service account key into `BIGQUERY_CREDENTIALS`
+### BigQuery Setup
 
-### 5. Test BigQuery Connection
+1. **Create Google Cloud Project**:
+   - Project ID: heyai-backend
+   - Enable BigQuery API
+
+2. **Create Service Account**:
+   - Role: BigQuery Admin
+   - Download JSON key file
+
+3. **Create Dataset**:
+   - Dataset name: agent_data
+   - Location: us-central1
+
+4. **Create Tables**:
+   Run the SQL schema from `bigquery_schema.sql`:
+   - `agents` - Agent configurations
+   - `calls` - Call records and transcripts
+   - `live_calls` - Active call monitoring
+   - `usage_history` - Daily usage aggregates
+
+### Service Account Credentials
+
+Format the service account JSON as a single-line string for the `BIGQUERY_CREDENTIALS` environment variable. Use the provided `format-credentials.js` script:
 
 ```bash
-node test-bigquery.js
+node format-credentials.js service-account-key.json
 ```
 
-You should see:
-```
-✅ BigQuery connection test completed successfully!
-```
+Copy the output and set it as the environment variable value in your deployment platform.
 
-### 6. Start Development Server
+## Deployment
 
-```bash
-npm run dev
-```
+### Vercel Deployment
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+1. **Connect Repository**:
+   - Import project from GitHub
+   - Select the HeyAI-admin-console directory
 
----
+2. **Configure Environment Variables**:
+   - Add all required variables in Vercel dashboard
+   - Ensure `BIGQUERY_CREDENTIALS` is properly formatted
+   - Select all environments (Production, Preview, Development)
 
-## 📖 Usage Guide
+3. **Deploy**:
+   - Vercel automatically builds and deploys
+   - Access via provided URL
 
-### Adding Your First AI Agent
+### Build Configuration
 
-1. Navigate to **Admin Console** (click button in top-right)
-2. Go to **Add Agent** page
-3. Fill in the form:
-   - **Agent Name**: e.g., "Customer Support Bot"
-   - **Provider**: e.g., "OpenAI" or "Anthropic"
-   - **API Key**: Your AI provider's API key
-4. Click **[Add Agent]**
-
-Your agent is now saved to BigQuery and ready to use!
-
-### Viewing Active Agents
-
-1. Go to **Existing Agents** page
-2. See all your configured agents
-3. **Actions**:
-   - **Activate/Deactivate**: Toggle agent status
-   - **Delete**: Remove an agent
-
-### Monitoring Calls
-
-#### Live Calls Dashboard
-- Go to **Live** page
-- See real-time active calls
-- Monitor call duration and status
-
-#### Call History
-- Go to **Usage History** page
-- View complete call records
-- See duration, cost, status for each call
-
-#### Analytics Dashboard
-- Go to **Dashboard** page
-- View key metrics:
-  - Total calls
-  - Active agents
-  - Total minutes
-  - Success rate
-  - Average duration
-
-### Managing Payments
-
-- Go to **Payment** page
-- View total spending on calls
-- Add funds to your account (coming soon)
-
----
-
-## 🔌 API Documentation
-
-### Agent Management
-
-#### Create or Update Agent
-```http
-POST /api/agents/upsert
-Content-Type: application/json
-
+```json
 {
-  "agent_id": "agent_123",
-  "agent_name": "Support Bot",
-  "status": "active",
-  "voice_model": "OpenAI",
-  "language": "en-US",
-  "max_concurrent_calls": 5,
-  "config": {
-    "api_key": "sk-...",
-    "provider": "OpenAI"
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "framework": "nextjs"
 }
 ```
 
-#### Get All Agents
-```http
-GET /api/agents
-```
+## API Endpoints
 
-#### Delete Agent
-```http
-DELETE /api/agents?agent_id=agent_123
-```
+### Agent Management
+
+**GET /api/agents**
+- Retrieves all agents from BigQuery
+- Returns agent configurations and metadata
+
+**POST /api/agents/upsert**
+- Creates or updates an agent
+- Accepts agent configuration in request body
+
+**DELETE /api/agents?agent_id={id}**
+- Removes an agent from the system
+- Note: May fail if agent has recent calls (streaming buffer)
+
+### Live Monitoring
+
+**GET /api/live-users**
+- Returns total live users and per-agent breakdown
+- Polls backend every 5 seconds for updates
+- Response format: `{liveUsers: number, byAgent: Record<string, number>}`
+
+### Dashboard Analytics
+
+**GET /api/dashboard/stats**
+- Total calls, active agents, total minutes, revenue
+
+**GET /api/dashboard/quick-stats**
+- Success rate, average duration, agent utilization
+
+**GET /api/dashboard/recent-activity**
+- Last 10 calls with details
 
 ### Call Management
 
-#### Get Call History
-```http
-GET /api/calls/history?limit=50&offset=0
-```
+**GET /api/calls/history**
+- Paginated call history
+- Query params: limit, offset
 
-#### Get Live Calls
-```http
-GET /api/calls/live
-```
+**GET /api/calls/live**
+- Currently active calls
 
-### Dashboard Stats
+## Development
 
-#### Get Statistics
-```http
-GET /api/dashboard/stats
-```
+### Local Setup
 
-#### Get Recent Activity
-```http
-GET /api/dashboard/recent-activity
-```
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-#### Get Quick Stats
-```http
-GET /api/dashboard/quick-stats
-```
+2. **Create Environment File**:
+   ```bash
+   cp .env.local.example .env.local
+   ```
 
----
+3. **Configure Variables**:
+   Edit `.env.local` with your credentials
 
-## 🎨 Design System
+4. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```
 
-### Colors
-- **Primary**: Yellow (`#FACC15`) - Action buttons, accents
-- **Background**: Black (`#000000`) - Dark theme
-- **Foreground**: White (`#FFFFFF`) - Text
-- **Success**: Green - Completed calls
-- **Error**: Red - Failed calls
-- **Warning**: Yellow - In-progress calls
+5. **Access Application**:
+   Open http://localhost:3000
 
-### Typography
-- **Headings**: Sentient (custom font)
-- **Body**: Inter
-- **Code/Mono**: Geist Mono
-
----
-
-## 📁 Project Structure
+### Project Structure
 
 ```
-heyai-admin-console/
+HeyAI-admin-console/
 ├── app/
 │   ├── page.tsx                    # Landing page
+│   ├── layout.tsx                  # Root layout
 │   ├── admin/
 │   │   ├── dashboard/              # Analytics dashboard
-│   │   ├── add-agent/              # Create new agents
-│   │   ├── existing-agents/        # Manage agents
-│   │   ├── live/                   # Live call monitoring
-│   │   ├── usage-history/          # Call history
-│   │   └── payment/                # Billing
+│   │   ├── add-agent/              # Agent creation
+│   │   ├── existing-agents/        # Agent management
+│   │   ├── payment/                # Billing overview
+│   │   └── layout.tsx              # Admin layout with sidebar
 │   └── api/
-│       ├── agents/                 # Agent CRUD APIs
-│       ├── calls/                  # Call management APIs
-│       └── dashboard/              # Analytics APIs
+│       ├── agents/                 # Agent CRUD operations
+│       ├── live-users/             # Live user tracking
+│       └── dashboard/              # Analytics endpoints
 ├── components/
-│   ├── gl/                         # 3D graphics engine
+│   ├── admin-sidebar.tsx           # Navigation sidebar
 │   ├── siri-animation.tsx          # Voice visualization
-│   ├── ui/                         # Reusable UI components
-│   └── ...
+│   ├── gl/                         # 3D graphics components
+│   └── ui/                         # Reusable UI components
 ├── lib/
-│   └── bigquery.ts                 # BigQuery client
+│   └── bigquery.ts                 # BigQuery client initialization
 ├── types/
-│   └── dashboard.ts                # TypeScript types
-└── bigquery_schema.sql             # Database schema
+│   └── dashboard.ts                # TypeScript type definitions
+└── public/
+    └── architecture.png            # System architecture diagram
 ```
 
----
+### Key Components
 
-## 🧪 Development & Testing
+- **AdminSidebar**: Navigation component with workspace and management sections
+- **Dashboard**: Analytics overview with charts and metrics
+- **ExistingAgents**: Agent list with live user counts and management actions
+- **AddAgent**: Form for creating new agents
+- **SiriAnimation**: Real-time audio waveform visualization
 
-### Run Development Server
-```bash
-npm run dev
-```
+## Integration Points
 
-### Build for Production
-```bash
-npm run build
-npm start
-```
+### Backend Integration
 
-### Test BigQuery Connection
-```bash
-node test-bigquery.js
-```
+The admin console communicates with the HeyAI Go backend for live user tracking:
 
-### Linting
-```bash
-npm run lint
-```
+- Endpoint: `/api/live-users`
+- Method: GET
+- Response: `{liveUsers: number, byAgent: {[agentId]: count}}`
+- Polling: Every 5 seconds
 
----
+### BigQuery Integration
 
-## 🐛 Troubleshooting
+All persistent data is stored in BigQuery:
 
-### BigQuery "Streaming Buffer" Error
+- Agent configurations
+- Call records and transcripts
+- Usage metrics and analytics
+- Billing information
 
-**Error**: `UPDATE or DELETE statement over table would affect rows in the streaming buffer`
+The `getBigQueryClient()` function in `lib/bigquery.ts` handles connection management and credential parsing.
 
-**Solution**: This happens when trying to update recently inserted data. Wait 10-30 minutes for BigQuery to flush the buffer, or delete and re-add the agent.
+## Performance
 
-### Environment Variables Not Loading
+- Server-side rendering for fast initial page loads
+- Client-side navigation for instant page transitions
+- Optimized BigQuery queries with proper indexing
+- Lazy loading for 3D graphics components
+- Efficient polling with 5-second intervals
+- Caching strategies for static assets
 
-**Solution**:
-1. Make sure `.env` file is in the project root
-2. Restart the development server
-3. Check that variables don't have quotes around them
+## Security
 
-### Can't Connect to BigQuery
+- Service account credentials stored in environment variables
+- API routes protected with proper error handling
+- Input validation on all forms
+- Secure BigQuery connections with service account authentication
+- CORS configuration for API endpoints
+- No sensitive data exposed in client-side code
 
-**Solution**:
-1. Verify service account has BigQuery Admin role
-2. Check that `BIGQUERY_CREDENTIALS` contains valid JSON
-3. Run `node test-bigquery.js` to diagnose
+## Troubleshooting
 
----
+### BigQuery Connection Issues
 
-## 🚀 Deployment
+If you see "Failed to initialize BigQuery client" errors:
 
-### Deploy to Vercel
+1. Verify `BIGQUERY_CREDENTIALS` is valid JSON
+2. Check service account has BigQuery Admin role
+3. Ensure dataset and tables exist
+4. Run validation script: `node validate-env.js`
 
-1. Push your code to GitHub
-2. Connect repository to Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy!
+### Streaming Buffer Errors
 
-### Environment Variables for Production
+When deleting recently added agents:
 
-Set these in your hosting platform:
-- `API_SECRET_KEY`
-- `BIGQUERY_PROJECT_ID`
-- `BIGQUERY_DATASET`
-- `BIGQUERY_CREDENTIALS`
+- Error: "Cannot delete recently added agent"
+- Cause: BigQuery streaming buffer (90-minute window)
+- Solution: Wait a few minutes and retry
 
----
+### Live Users Not Updating
 
-## 🤝 Contributing
+If live user counts aren't updating:
 
-We welcome contributions! Here's how:
+1. Check backend is running and accessible
+2. Verify `BACKEND_URL` environment variable
+3. Check browser console for API errors
+4. Ensure backend `/api/live-users` endpoint is working
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## License
 
----
+MIT License
 
-## 📄 License
+## Support
 
-This project is licensed under the MIT License.
-
----
-
-## 💬 Support
-
-Need help? Have questions?
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/heyai/issues)
-- **Documentation**: See this README
-- **Email**: support@heyai.com
-
----
-
-## 🙏 Acknowledgments
-
-- Built with [Next.js](https://nextjs.org/)
-- UI components from [Radix UI](https://www.radix-ui.com/)
-- 3D graphics powered by [Three.js](https://threejs.org/)
-- Analytics by [Google BigQuery](https://cloud.google.com/bigquery)
-
----
-
-**Made with ❤️ by the HeyAI Team**
+For issues and questions, please open an issue in the repository or contact the development team.
